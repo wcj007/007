@@ -1,52 +1,90 @@
 # DogHandoffCard
 
-DogHandoffCard is a small native Android prototype for creating senior-dog care
-handoff cards before family care, boarding, or temporary pet sitting.
+DogHandoffCard is a native Android app for creating senior-dog care handoff
+cards before family care, boarding, or temporary pet sitting.
 
-The app focuses on one practical Android workflow: enter the dog's care details,
-check whether the handoff is safe to share, and generate a plain-text card that
-can be sent through any Android share target.
+The project focuses on a narrow, practical workflow: enter the dog's daily
+care details, check whether critical safety details are missing, save the draft
+locally, and generate a plain-text card that can be shared through any Android
+share target.
+
+## Why This Exists
+
+Temporary caregivers often receive scattered instructions through chat messages,
+paper notes, or memory. Senior dogs make this risky because feeding, medication,
+walk timing, and emergency contacts need to be clear before the owner leaves.
+
+DogHandoffCard turns that handoff into a repeatable checklist and exportable
+card. The current scope is intentionally small so the app stays easy to audit,
+test, and extend.
 
 ## Current Features
 
-- Native Android app module using Java and Gradle
-- Single-dog handoff form for dog profile, feeding, walks, medication, owner,
-  clinic, and caregiver details
-- Handoff readiness scoring that flags missing critical details before sharing
-- Share button that is disabled until critical blockers are fixed
-- Plain-text handoff card builder for SMS, WeChat, email, notes, or any Android
-  share target
-- Unit tests for readiness scoring and card generation logic
+- Native Android app written in Java with Gradle
+- Single-dog handoff form for profile, temperament, feeding, water, walks,
+  medication, owner contact, clinic contact, caregiver, and trip notes
+- Local draft save and restore with Android `SharedPreferences`
+- Handoff readiness scoring with blockers, warnings, and info items
+- Share button stays disabled until critical blockers are fixed
+- Plain-text handoff card builder for SMS, WeChat, email, notes, or other
+  Android share targets
+- Unit tests for readiness scoring, card content, and medication ordering
+- GitHub Actions workflow for test and debug APK build
+
+## Screenshot
+
+The current Android screenshot is stored at:
+
+![DogHandoffCard main screen](docs/screenshots/doghandoffcard-main.png)
 
 ## Project Structure
 
-- `settings.gradle.kts`: Gradle project settings
-- `build.gradle.kts`: top-level Android Gradle plugin declaration
-- `app/build.gradle.kts`: Android app module configuration
-- `app/src/main/java/com/example/doghandoffcard/`: app and domain logic
+- `app/src/main/java/com/example/doghandoffcard/`: Android UI and domain logic
 - `app/src/test/java/com/example/doghandoffcard/`: unit tests
+- `.github/workflows/android.yml`: CI for unit tests and debug APK assembly
+- `.github/ISSUE_TEMPLATE/`: issue templates for bug reports and feature ideas
+- `docs/`: application notes, release checklist, and maintainer evidence
 
-## Open On Android Studio
+## Build And Run
 
-1. Install Android Studio with Android SDK 35 or newer.
-2. Open this repository folder in Android Studio.
-3. Let Gradle sync.
-4. Run the `app` configuration on an emulator or Android phone.
+Open this repository in Android Studio, let Gradle sync, and run the `app`
+configuration on an emulator or Android phone.
 
-## Verification
-
-Run unit tests from Android Studio, or use:
+The project includes Gradle wrapper files, so a fresh clone can build without a
+separate Gradle installation.
 
 ```powershell
-gradle test
+.\gradlew.bat test
+.\gradlew.bat assembleDebug
 ```
 
-If you prefer the Android Studio workflow, open the project and run the `test`
-task from the Gradle tool window.
+The debug APK is generated at:
 
-## Known Limits
+```text
+app/build/outputs/apk/debug/app-debug.apk
+```
 
-- Early local prototype; no cloud sync, account system, or database yet.
-- The current UI is a simple single-screen Android form.
-- Export is plain text through Android share intents; PDF/image export is not
-  implemented in this Android version.
+## Verification Status
+
+The maintainer verification checklist lives in
+[`docs/OPENAI_OSS_APPLICATION.md`](docs/OPENAI_OSS_APPLICATION.md).
+
+Current local gates:
+
+- Unit tests: expected to pass with `test`
+- Debug APK: expected to build with `assembleDebug`
+- Device smoke test: install the debug APK, launch `DogHandoffCard`, load sample
+  data, build a handoff card, and confirm the share button becomes enabled
+
+## Roadmap
+
+See [`ROADMAP.md`](ROADMAP.md).
+
+## Contributing
+
+Bug reports, focused feature ideas, and small pull requests are welcome. Please
+read [`CONTRIBUTING.md`](CONTRIBUTING.md) before opening a pull request.
+
+## License
+
+This project is released under the MIT License. See [`LICENSE`](LICENSE).

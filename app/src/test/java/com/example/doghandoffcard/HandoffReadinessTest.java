@@ -55,14 +55,48 @@ public final class HandoffReadinessTest {
     @Test
     public void buildsPlainTextCardWithMedicationAndContacts() {
         DogProfile profile = completeProfile();
+        profile.temperament = "Friendly, but nervous around stairs.";
+        profile.doNotDo = "Do not allow sofa jumping.";
+        profile.careRule.water = "Refresh water twice daily.";
+        profile.careRule.foodsToAvoid = "No chicken bones, grapes, raisins, or onions.";
         HandoffDraft draft = new HandoffDraft();
         draft.caregiverName = "Boarding staff";
+        draft.caregiverType = "Boarding";
+        draft.tripNote = "Owner is away overnight.";
 
         HandoffCardSnapshot snapshot = HandoffCardBuilder.build(profile, draft);
 
         assertTrue(snapshot.plainText.contains("Pimobendan"));
         assertTrue(snapshot.plainText.contains("Owner"));
+        assertTrue(snapshot.plainText.contains("Friendly, but nervous around stairs."));
+        assertTrue(snapshot.plainText.contains("Refresh water twice daily."));
+        assertTrue(snapshot.plainText.contains("Owner is away overnight."));
         assertTrue(snapshot.plainText.contains("6. Contacts"));
+    }
+
+    @Test
+    public void sortsMedicationByFirstScheduleTime() {
+        DogProfile profile = completeProfile();
+
+        MedicationItem lateMedication = new MedicationItem();
+        lateMedication.name = "Evening supplement";
+        lateMedication.dosage = "1 scoop";
+        lateMedication.schedule = "20:30";
+        lateMedication.missedDoseRule = "Skip and tell owner.";
+
+        MedicationItem earlyMedication = new MedicationItem();
+        earlyMedication.name = "Morning eye drops";
+        earlyMedication.dosage = "2 drops";
+        earlyMedication.schedule = "07:30";
+        earlyMedication.missedDoseRule = "Call owner.";
+
+        profile.medications.clear();
+        profile.medications.add(lateMedication);
+        profile.medications.add(earlyMedication);
+
+        HandoffCardSnapshot snapshot = HandoffCardBuilder.build(profile, new HandoffDraft());
+
+        assertTrue(snapshot.plainText.indexOf("Morning eye drops") < snapshot.plainText.indexOf("Evening supplement"));
     }
 
     private DogProfile completeProfile() {

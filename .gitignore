@@ -13,5 +13,8 @@ captures/
 # Android Studio generated output
 app/build/
 
+# Local emulator diagnostics
+emulator*.log
+
 # OS files
 Thumbs.db

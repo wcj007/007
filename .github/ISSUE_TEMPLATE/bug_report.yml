@@ -1,0 +1,36 @@
+name: Bug report
+description: Report a reproducible DogHandoffCard problem.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please use fake sample data. Do not post real phone numbers, clinic contacts, addresses, or medication details.
+  - type: input
+    id: android-version
+    attributes:
+      label: Android version
+      placeholder: "Example: Android 15"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: "1. Open the app\n2. Load sample data\n3. Tap Build handoff card"
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true

@@ -1,6 +1,7 @@
 package com.example.doghandoffcard;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,11 +14,18 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 public final class MainActivity extends Activity {
+    private static final String PREFS_NAME = "dog-handoff-draft";
+
     private EditText dogNameField;
     private EditText ageField;
     private EditText breedField;
+    private EditText weightField;
+    private EditText temperamentField;
+    private EditText doNotDoField;
     private EditText feedingField;
+    private EditText waterField;
     private EditText walksField;
+    private EditText foodsToAvoidField;
     private EditText medicationNameField;
     private EditText medicationDoseField;
     private EditText medicationTimeField;
@@ -25,6 +33,8 @@ public final class MainActivity extends Activity {
     private EditText ownerPhoneField;
     private EditText clinicPhoneField;
     private EditText caregiverField;
+    private EditText caregiverTypeField;
+    private EditText tripNoteField;
     private TextView readinessOutput;
     private TextView cardOutput;
     private Button shareButton;
@@ -37,7 +47,7 @@ public final class MainActivity extends Activity {
         ScrollView scrollView = new ScrollView(this);
         LinearLayout content = new LinearLayout(this);
         content.setOrientation(LinearLayout.VERTICAL);
-        content.setPadding(32, 32, 32, 32);
+        content.setPadding(32, 96, 32, 32);
         scrollView.addView(content);
 
         TextView title = new TextView(this);
@@ -55,8 +65,13 @@ public final class MainActivity extends Activity {
         dogNameField = addField(content, "Dog name");
         ageField = addField(content, "Age");
         breedField = addField(content, "Breed");
+        weightField = addField(content, "Weight");
+        temperamentField = addMultilineField(content, "Temperament and handling notes");
+        doNotDoField = addMultilineField(content, "Do not do");
         feedingField = addMultilineField(content, "Feeding instructions");
-        walksField = addField(content, "Walk frequency");
+        waterField = addField(content, "Water instructions");
+        walksField = addMultilineField(content, "Walk frequency");
+        foodsToAvoidField = addMultilineField(content, "Foods or situations to avoid");
         medicationNameField = addField(content, "Medication name");
         medicationDoseField = addField(content, "Medication dose");
         medicationTimeField = addField(content, "Medication time, for example 08:00,20:00");
@@ -64,11 +79,23 @@ public final class MainActivity extends Activity {
         ownerPhoneField = addField(content, "Owner phone");
         clinicPhoneField = addField(content, "Clinic phone");
         caregiverField = addField(content, "Caregiver name");
+        caregiverTypeField = addField(content, "Caregiver type");
+        tripNoteField = addMultilineField(content, "Trip or boarding note");
 
         Button sampleButton = new Button(this);
         sampleButton.setText("Load sample data");
         sampleButton.setOnClickListener(view -> loadSampleData());
         content.addView(sampleButton);
+
+        Button saveButton = new Button(this);
+        saveButton.setText("Save draft");
+        saveButton.setOnClickListener(view -> saveDraft());
+        content.addView(saveButton);
+
+        Button clearButton = new Button(this);
+        clearButton.setText("Clear draft");
+        clearButton.setOnClickListener(view -> clearDraft());
+        content.addView(clearButton);
 
         Button buildButton = new Button(this);
         buildButton.setText("Build handoff card");
@@ -91,6 +118,7 @@ public final class MainActivity extends Activity {
         cardOutput.setTextColor(Color.rgb(45, 45, 45));
         content.addView(cardOutput);
 
+        restoreDraft();
         setContentView(scrollView);
     }
 
@@ -116,8 +144,13 @@ public final class MainActivity extends Activity {
         dogNameField.setText("Lucky");
         ageField.setText("13 years");
         breedField.setText("Corgi");
+        weightField.setText("12.5kg");
+        temperamentField.setText("Friendly but anxious around stairs and loud dryers.");
+        doNotDoField.setText("Do not give table scraps. Do not allow jumping from sofas.");
         feedingField.setText("Two meals, 80g each. No chicken bones.");
+        waterField.setText("Refresh water every morning and evening.");
         walksField.setText("Short walk after breakfast, dinner, and before bed.");
+        foodsToAvoidField.setText("Avoid chicken bones, grapes, raisins, onions, and salty snacks.");
         medicationNameField.setText("Pimobendan");
         medicationDoseField.setText("1 tablet");
         medicationTimeField.setText("08:00,20:00");
@@ -125,6 +158,85 @@ public final class MainActivity extends Activity {
         ownerPhoneField.setText("TEST-OWNER-PHONE");
         clinicPhoneField.setText("TEST-CLINIC-PHONE");
         caregiverField.setText("Boarding staff");
+        caregiverTypeField.setText("Boarding");
+        tripNoteField.setText("Owner is away for one night. Call before changing food or medication.");
+        buildCard();
+    }
+
+    private void saveDraft() {
+        SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
+        put(editor, "dogName", dogNameField);
+        put(editor, "age", ageField);
+        put(editor, "breed", breedField);
+        put(editor, "weight", weightField);
+        put(editor, "temperament", temperamentField);
+        put(editor, "doNotDo", doNotDoField);
+        put(editor, "feeding", feedingField);
+        put(editor, "water", waterField);
+        put(editor, "walks", walksField);
+        put(editor, "foodsToAvoid", foodsToAvoidField);
+        put(editor, "medicationName", medicationNameField);
+        put(editor, "medicationDose", medicationDoseField);
+        put(editor, "medicationTime", medicationTimeField);
+        put(editor, "missedDose", missedDoseField);
+        put(editor, "ownerPhone", ownerPhoneField);
+        put(editor, "clinicPhone", clinicPhoneField);
+        put(editor, "caregiver", caregiverField);
+        put(editor, "caregiverType", caregiverTypeField);
+        put(editor, "tripNote", tripNoteField);
+        editor.apply();
+        buildCard();
+    }
+
+    private void restoreDraft() {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        if (!prefs.contains("dogName")) {
+            return;
+        }
+
+        read(prefs, "dogName", dogNameField);
+        read(prefs, "age", ageField);
+        read(prefs, "breed", breedField);
+        read(prefs, "weight", weightField);
+        read(prefs, "temperament", temperamentField);
+        read(prefs, "doNotDo", doNotDoField);
+        read(prefs, "feeding", feedingField);
+        read(prefs, "water", waterField);
+        read(prefs, "walks", walksField);
+        read(prefs, "foodsToAvoid", foodsToAvoidField);
+        read(prefs, "medicationName", medicationNameField);
+        read(prefs, "medicationDose", medicationDoseField);
+        read(prefs, "medicationTime", medicationTimeField);
+        read(prefs, "missedDose", missedDoseField);
+        read(prefs, "ownerPhone", ownerPhoneField);
+        read(prefs, "clinicPhone", clinicPhoneField);
+        read(prefs, "caregiver", caregiverField);
+        read(prefs, "caregiverType", caregiverTypeField);
+        read(prefs, "tripNote", tripNoteField);
+        buildCard();
+    }
+
+    private void clearDraft() {
+        getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().clear().apply();
+        dogNameField.setText("");
+        ageField.setText("");
+        breedField.setText("");
+        weightField.setText("");
+        temperamentField.setText("");
+        doNotDoField.setText("");
+        feedingField.setText("");
+        waterField.setText("");
+        walksField.setText("");
+        foodsToAvoidField.setText("");
+        medicationNameField.setText("");
+        medicationDoseField.setText("");
+        medicationTimeField.setText("");
+        missedDoseField.setText("");
+        ownerPhoneField.setText("");
+        clinicPhoneField.setText("");
+        caregiverField.setText("");
+        caregiverTypeField.setText("");
+        tripNoteField.setText("");
         buildCard();
     }
 
@@ -132,6 +244,8 @@ public final class MainActivity extends Activity {
         DogProfile profile = readProfile();
         HandoffDraft draft = new HandoffDraft();
         draft.caregiverName = text(caregiverField);
+        draft.caregiverType = text(caregiverTypeField);
+        draft.tripNote = text(tripNoteField);
 
         HandoffReadinessReport report = HandoffReadiness.evaluate(profile, draft);
         HandoffCardSnapshot snapshot = HandoffCardBuilder.build(profile, draft);
@@ -147,8 +261,13 @@ public final class MainActivity extends Activity {
         profile.name = text(dogNameField);
         profile.age = text(ageField);
         profile.breed = text(breedField);
+        profile.weight = text(weightField);
+        profile.temperament = text(temperamentField);
+        profile.doNotDo = text(doNotDoField);
         profile.careRule.feeding = text(feedingField);
+        profile.careRule.water = text(waterField);
         profile.careRule.walks = text(walksField);
+        profile.careRule.foodsToAvoid = text(foodsToAvoidField);
         profile.careRule.callOwnerIf = "Call owner if medication is refused, appetite changes, vomiting starts, or behavior changes sharply.";
         profile.careRule.goVetIf = "Go to a vet for breathing trouble, seizures, collapse, poisoning risk, bleeding, or ongoing vomiting.";
 
@@ -204,5 +323,13 @@ public final class MainActivity extends Activity {
 
     private String text(EditText field) {
         return field.getText().toString().trim();
+    }
+
+    private void put(SharedPreferences.Editor editor, String key, EditText field) {
+        editor.putString(key, text(field));
+    }
+
+    private void read(SharedPreferences prefs, String key, EditText field) {
+        field.setText(prefs.getString(key, ""));
     }
 }
