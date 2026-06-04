@@ -1,10 +1,17 @@
 .DS_Store
 
-# Xcode user-specific data
-xcuserdata/
-*.xcuserdatad
-*.xcuserstate
-
-# Build products
+# Android / Gradle build products
 build/
-DerivedData/
+.gradle/
+local.properties
+captures/
+
+# IDE files
+.idea/
+*.iml
+
+# Android Studio generated output
+app/build/
+
+# OS files
+Thumbs.db

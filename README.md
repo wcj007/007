@@ -1,38 +1,52 @@
 # DogHandoffCard
 
-DogHandoffCard is a local-first SwiftUI iPhone prototype for creating senior-dog
-care handoff cards before family care, boarding, or temporary pet sitting.
+DogHandoffCard is a small native Android prototype for creating senior-dog care
+handoff cards before family care, boarding, or temporary pet sitting.
 
-The app focuses on one practical workflow: collect the dog profile, medication
-rules, emergency contacts, and trip details, then export a caregiver-ready
-handoff card as image, PDF, or plain text.
+The app focuses on one practical Android workflow: enter the dog's care details,
+check whether the handoff is safe to share, and generate a plain-text card that
+can be sent through any Android share target.
 
 ## Current Features
 
-- Single-dog profile with age, breed, weight, temperament, and no-go tags
-- Medication schedule entries with dose, timing, food rules, and missed-dose notes
-- Daily care rules for feeding, water, walks, trigger warnings, and vet guidance
-- Owner, backup, clinic, and boarding contacts
+- Native Android app module using Java and Gradle
+- Single-dog handoff form for dog profile, feeding, walks, medication, owner,
+  clinic, and caregiver details
 - Handoff readiness scoring that flags missing critical details before sharing
-- Saved handoff card history with duplicate-and-edit support
-- Image, PDF, and plain-text export
+- Share button that is disabled until critical blockers are fixed
+- Plain-text handoff card builder for SMS, WeChat, email, notes, or any Android
+  share target
+- Unit tests for readiness scoring and card generation logic
 
-## Structure
+## Project Structure
 
-- `DogHandoffCard.xcodeproj`: Xcode project
-- `DogHandoffCard/`: app source
-- `DogHandoffCardTests/`: unit tests
+- `settings.gradle.kts`: Gradle project settings
+- `build.gradle.kts`: top-level Android Gradle plugin declaration
+- `app/build.gradle.kts`: Android app module configuration
+- `app/src/main/java/com/example/doghandoffcard/`: app and domain logic
+- `app/src/test/java/com/example/doghandoffcard/`: unit tests
 
-## Open On Mac
+## Open On Android Studio
 
-1. Open `DogHandoffCard.xcodeproj` in Xcode 16 or later.
-2. Select an iPhone simulator or device.
-3. Build and run.
+1. Install Android Studio with Android SDK 35 or newer.
+2. Open this repository folder in Android Studio.
+3. Let Gradle sync.
+4. Run the `app` configuration on an emulator or Android phone.
 
 ## Verification
 
-The repository includes unit tests for the handoff card builder and readiness
-scoring logic. Run them from Xcode with the `DogHandoffCardTests` target.
+Run unit tests from Android Studio, or use:
 
-This project is currently maintained as an early-stage open prototype. It has
-not been packaged for App Store distribution.
+```powershell
+gradle test
+```
+
+If you prefer the Android Studio workflow, open the project and run the `test`
+task from the Gradle tool window.
+
+## Known Limits
+
+- Early local prototype; no cloud sync, account system, or database yet.
+- The current UI is a simple single-screen Android form.
+- Export is plain text through Android share intents; PDF/image export is not
+  implemented in this Android version.
