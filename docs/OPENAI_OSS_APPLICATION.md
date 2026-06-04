@@ -61,7 +61,12 @@ spam.
 - [x] GitHub Actions test/build workflow is present.
 - [x] GitHub Actions workflow is green on GitHub after push:
   `https://github.com/wcj007/007/actions/runs/26972656042`
-- [ ] `v0.1.0` GitHub Release exists with debug APK attached.
+- [x] `v0.1.0` GitHub Release exists with debug APK attached:
+  `https://github.com/wcj007/007/releases/tag/v0.1.0`
+- [x] Maintainer roadmap issues are open:
+  `https://github.com/wcj007/007/issues/1`,
+  `https://github.com/wcj007/007/issues/2`,
+  `https://github.com/wcj007/007/issues/3`
 - [x] Screenshot is present in `docs/screenshots/`.
 - [x] Local unit tests pass on 2026-06-05.
 - [x] Local debug APK builds on 2026-06-05.

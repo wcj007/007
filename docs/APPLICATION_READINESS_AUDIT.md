@@ -28,16 +28,19 @@ dependency evidence.
 - GitHub Actions passed on `main`:
   `https://github.com/wcj007/007/actions/runs/26972656042`
 - Application draft is prepared in `docs/OPENAI_OSS_APPLICATION.md`.
+- `v0.1.0` release exists with APK attached:
+  `https://github.com/wcj007/007/releases/tag/v0.1.0`
+- Maintainer roadmap issues are open:
+  `https://github.com/wcj007/007/issues/1`
+  `https://github.com/wcj007/007/issues/2`
+  `https://github.com/wcj007/007/issues/3`
 
 ## Remaining Remote Evidence
 
-- Create `v0.1.0` GitHub Release and attach `app-debug.apk`.
-- Optional but useful: open a few honest maintainer-created issues from the
-  roadmap so the repository shows active maintenance planning.
+No required remote evidence remains for a first application attempt.
 
 ## Application Judgment
 
-Ready to apply as an early-stage open-source maintainer project after the remote
-GitHub checks and release are completed.
+Ready to apply as an early-stage open-source maintainer project.
 
 Not ready to describe as widely adopted or ecosystem-critical.

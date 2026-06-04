@@ -11,8 +11,12 @@
 - [x] Capture screenshot at `docs/screenshots/doghandoffcard-main.png`.
 - [x] Commit release-ready changes.
 - [x] Confirm GitHub Actions passed on `main`.
-- [ ] Tag `v0.1.0`.
-- [ ] Create GitHub Release with APK attached.
+- [x] Tag `v0.1.0`.
+- [x] Create GitHub Release with APK attached.
+
+Release: `https://github.com/wcj007/007/releases/tag/v0.1.0`
+
+APK: `https://github.com/wcj007/007/releases/download/v0.1.0/DogHandoffCard-v0.1.0-debug.apk`
 
 ## Release Notes Draft
 
