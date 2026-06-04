@@ -9,7 +9,8 @@
 - [x] Launch app and load sample data.
 - [x] Build a handoff card and confirm the share button is enabled.
 - [x] Capture screenshot at `docs/screenshots/doghandoffcard-main.png`.
-- [ ] Commit release-ready changes.
+- [x] Commit release-ready changes.
+- [x] Confirm GitHub Actions passed on `main`.
 - [ ] Tag `v0.1.0`.
 - [ ] Create GitHub Release with APK attached.
 

@@ -25,12 +25,12 @@ dependency evidence.
 - Screenshot exists at `docs/screenshots/doghandoffcard-main.png`.
 - README, License, contributing guide, security notes, roadmap, issue templates,
   PR template, and GitHub Actions workflow are present.
+- GitHub Actions passed on `main`:
+  `https://github.com/wcj007/007/actions/runs/26972656042`
 - Application draft is prepared in `docs/OPENAI_OSS_APPLICATION.md`.
 
 ## Remaining Remote Evidence
 
-- Push the new commit to GitHub.
-- Confirm GitHub Actions passes on `main`.
 - Create `v0.1.0` GitHub Release and attach `app-debug.apk`.
 - Optional but useful: open a few honest maintainer-created issues from the
   roadmap so the repository shows active maintenance planning.

@@ -59,7 +59,8 @@ spam.
 - [x] Contribution and security guidance are present.
 - [x] Issue templates and PR template are present.
 - [x] GitHub Actions test/build workflow is present.
-- [ ] GitHub Actions workflow is green on GitHub after push.
+- [x] GitHub Actions workflow is green on GitHub after push:
+  `https://github.com/wcj007/007/actions/runs/26972656042`
 - [ ] `v0.1.0` GitHub Release exists with debug APK attached.
 - [x] Screenshot is present in `docs/screenshots/`.
 - [x] Local unit tests pass on 2026-06-05.
