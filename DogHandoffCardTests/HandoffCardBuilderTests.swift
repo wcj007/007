@@ -128,4 +128,78 @@ final class HandoffCardBuilderTests: XCTestCase {
         XCTAssertEqual(duplicated.caregiverType, record.caregiverType)
         XCTAssertEqual(duplicated.customNote, record.customNote)
     }
+
+    func testReadinessReportFlagsCriticalMissingDetails() {
+        let pet = PetProfile()
+
+        let report = HandoffReadiness.evaluate(for: pet)
+        let ids = Set(report.items.map(\.id))
+
+        XCTAssertTrue(report.hasBlockers)
+        XCTAssertTrue(ids.contains("missing-dog-name"))
+        XCTAssertTrue(ids.contains("missing-care-rules"))
+        XCTAssertTrue(ids.contains("missing-owner-phone"))
+        XCTAssertLessThan(report.score, 80)
+    }
+
+    func testReadinessReportPassesCompleteHandoffData() {
+        let pet = PetProfile(
+            name: "Lucky",
+            ageText: "13 years",
+            breed: "Corgi",
+            weightText: "12.5kg"
+        )
+
+        let careRule = CareRule(
+            feedingAmount: "Two meals, 80g each",
+            waterNotes: "Fresh water all day",
+            walkFrequency: "3 walks a day",
+            forbiddenFoodsText: "chocolate,onion",
+            cannotDoText: "do not give unfamiliar treats",
+            triggerWarningsText: "energy drop,vomits medication",
+            callOwnerNowText: "Call the owner for missed doses, vomiting, or refusal to eat",
+            goVetNowText: "Go to the vet for seizures, ongoing vomiting, or breathing trouble",
+            handoffTipsText: "Gets nervous around unfamiliar dogs"
+        )
+        careRule.pet = pet
+        pet.careRules.append(careRule)
+
+        let owner = EmergencyContact(role: "Owner", name: "Test Owner", phone: "TEST-CONTACT")
+        owner.pet = pet
+        pet.contacts.append(owner)
+
+        let clinic = EmergencyContact(role: "Clinic", name: "Test Clinic", phone: "TEST-CLINIC")
+        clinic.pet = pet
+        pet.contacts.append(clinic)
+
+        let medication = MedicationItem(
+            name: "Pimobendan",
+            dosage: "1 tablet",
+            frequencyText: "Twice daily",
+            specificTimes: "08:00,20:00",
+            missedDoseInstruction: "Call the owner before making up a missed dose"
+        )
+        medication.pet = pet
+        pet.medications.append(medication)
+
+        let draft = HandoffCardDraft(caregiverName: "Test Boarding Staff")
+        let report = HandoffReadiness.evaluate(for: pet, draft: draft)
+
+        XCTAssertFalse(report.hasBlockers)
+        XCTAssertGreaterThanOrEqual(report.score, 90)
+        XCTAssertEqual(report.statusTitle, "Ready to share")
+    }
+
+    func testReadinessReportBlocksInvalidCoverageWindow() {
+        let startDate = Date(timeIntervalSince1970: 100)
+        let endDate = Date(timeIntervalSince1970: 50)
+        let draft = HandoffCardDraft(startDate: startDate, endDate: endDate)
+        let pet = PetProfile(name: "Lucky")
+
+        let report = HandoffReadiness.evaluate(for: pet, draft: draft)
+        let ids = Set(report.items.map(\.id))
+
+        XCTAssertTrue(report.hasBlockers)
+        XCTAssertTrue(ids.contains("invalid-coverage-window"))
+    }
 }

@@ -17,6 +17,10 @@ struct HandoffView: View {
         HandoffCardBuilder.build(for: pet, draft: draft)
     }
 
+    private var readinessReport: HandoffReadinessReport {
+        HandoffReadiness.evaluate(for: pet, draft: draft)
+    }
+
     var body: some View {
         Form {
             Section {
@@ -59,6 +63,32 @@ struct HandoffView: View {
                 TextField("Trip-specific note", text: $draft.customNote, axis: .vertical)
             }
 
+            Section("Readiness check") {
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Text(readinessReport.statusTitle)
+                            .font(.headline)
+                        Spacer()
+                        Text("\(readinessReport.score)")
+                            .font(.title3.bold())
+                            .foregroundStyle(readinessReport.hasBlockers ? .red : .green)
+                    }
+
+                    Text(readinessReport.statusDescription)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+
+                if readinessReport.priorityItems.isEmpty {
+                    Label("No critical gaps found", systemImage: "checkmark.seal.fill")
+                        .foregroundStyle(.green)
+                } else {
+                    ForEach(Array(readinessReport.priorityItems.prefix(5))) { item in
+                        HandoffReadinessRow(item: item)
+                    }
+                }
+            }
+
             Section("Preview") {
                 HandoffCardPreviewView(snapshot: snapshot)
                     .listRowInsets(EdgeInsets())
@@ -69,10 +99,12 @@ struct HandoffView: View {
                 Button("Save as a new card") {
                     saveCurrentCard()
                 }
+                .disabled(readinessReport.hasBlockers)
 
                 Button("Share image / PDF / text file") {
                     shareCurrentCard()
                 }
+                .disabled(readinessReport.hasBlockers)
 
                 Button("Copy plain text summary") {
                     UIPasteboard.general.string = snapshot.plainText
@@ -123,6 +155,48 @@ struct HandoffView: View {
     private func showMessage(_ message: String) {
         alertMessage = message
         showingAlert = true
+    }
+}
+
+private struct HandoffReadinessRow: View {
+    let item: HandoffReadinessItem
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 8) {
+            Image(systemName: iconName)
+                .foregroundStyle(iconColor)
+                .frame(width: 20)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(item.title)
+                    .font(.subheadline.weight(.semibold))
+                Text(item.detail)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    private var iconName: String {
+        switch item.severity {
+        case .blocker:
+            return "exclamationmark.triangle.fill"
+        case .warning:
+            return "exclamationmark.circle.fill"
+        case .info:
+            return "info.circle.fill"
+        }
+    }
+
+    private var iconColor: Color {
+        switch item.severity {
+        case .blocker:
+            return .red
+        case .warning:
+            return .orange
+        case .info:
+            return .blue
+        }
     }
 }
 

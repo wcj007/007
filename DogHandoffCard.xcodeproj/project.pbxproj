@@ -18,6 +18,7 @@
 		A10000000000000000000009 /* HandoffView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000009 /* HandoffView.swift */; };
 		A1000000000000000000000A /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000A /* ShareSheet.swift */; };
 		A1000000000000000000000B /* HandoffCardBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000B /* HandoffCardBuilderTests.swift */; };
+		A1000000000000000000000C /* HandoffReadiness.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000E /* HandoffReadiness.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		A2000000000000000000000B /* HandoffCardBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandoffCardBuilderTests.swift; sourceTree = "<group>"; };
 		A2000000000000000000000C /* DogHandoffCard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DogHandoffCard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2000000000000000000000D /* DogHandoffCardTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DogHandoffCardTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2000000000000000000000E /* HandoffReadiness.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandoffReadiness.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +81,7 @@
 				A20000000000000000000001 /* DogHandoffCardApp.swift */,
 				A20000000000000000000002 /* Models.swift */,
 				A20000000000000000000003 /* HandoffCardBuilder.swift */,
+				A2000000000000000000000E /* HandoffReadiness.swift */,
 				A20000000000000000000004 /* ExportService.swift */,
 				A20000000000000000000005 /* RootView.swift */,
 				A20000000000000000000006 /* HomeView.swift */,
@@ -208,6 +211,7 @@
 				A10000000000000000000001 /* DogHandoffCardApp.swift in Sources */,
 				A10000000000000000000002 /* Models.swift in Sources */,
 				A10000000000000000000003 /* HandoffCardBuilder.swift in Sources */,
+				A1000000000000000000000C /* HandoffReadiness.swift in Sources */,
 				A10000000000000000000004 /* ExportService.swift in Sources */,
 				A10000000000000000000005 /* RootView.swift in Sources */,
 				A10000000000000000000006 /* HomeView.swift in Sources */,

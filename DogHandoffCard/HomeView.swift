@@ -8,10 +8,15 @@ struct HomeView: View {
         pet.sortedCards.first
     }
 
+    private var readinessReport: HandoffReadinessReport {
+        HandoffReadiness.evaluate(for: pet)
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 heroSection
+                readinessSection
                 overviewSection
                 latestCardSection
                 quickActionsSection
@@ -55,6 +60,12 @@ struct HomeView: View {
                 StatCard(title: "Contacts", value: "\(pet.contacts.count)", systemImage: "person.2.fill")
                 StatCard(title: "Saved cards", value: "\(pet.cards.count)", systemImage: "doc.text.fill")
             }
+        }
+    }
+
+    private var readinessSection: some View {
+        ReadinessCard(report: readinessReport) {
+            selection = readinessReport.hasBlockers ? .care : .handoff
         }
     }
 
@@ -131,6 +142,99 @@ struct HomeView: View {
                 )
             }
             .buttonStyle(.plain)
+        }
+    }
+}
+
+private struct ReadinessCard: View {
+    let report: HandoffReadinessReport
+    let action: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .top, spacing: 12) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Handoff readiness")
+                        .font(.headline)
+                    Text(report.statusTitle)
+                        .font(.title3.bold())
+                    Text(report.statusDescription)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer()
+
+                Text("\(report.score)")
+                    .font(.system(size: 34, weight: .bold, design: .rounded))
+                    .foregroundStyle(report.hasBlockers ? .red : .green)
+                    .accessibilityLabel("Readiness score \(report.score)")
+            }
+
+            if report.priorityItems.isEmpty {
+                Label("No critical gaps found", systemImage: "checkmark.seal.fill")
+                    .font(.callout)
+                    .foregroundStyle(.green)
+            } else {
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(Array(report.priorityItems.prefix(3))) { item in
+                        ReadinessItemRow(item: item)
+                    }
+                }
+            }
+
+            Button(report.hasBlockers ? "Fix missing details" : "Create handoff card") {
+                action()
+            }
+            .buttonStyle(.borderedProminent)
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .fill(Color(.secondarySystemBackground))
+        )
+    }
+}
+
+private struct ReadinessItemRow: View {
+    let item: HandoffReadinessItem
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 8) {
+            Image(systemName: iconName)
+                .foregroundStyle(iconColor)
+                .frame(width: 20)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(item.title)
+                    .font(.subheadline.weight(.semibold))
+                Text(item.detail)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    private var iconName: String {
+        switch item.severity {
+        case .blocker:
+            return "exclamationmark.triangle.fill"
+        case .warning:
+            return "exclamationmark.circle.fill"
+        case .info:
+            return "info.circle.fill"
+        }
+    }
+
+    private var iconColor: Color {
+        switch item.severity {
+        case .blocker:
+            return .red
+        case .warning:
+            return .orange
+        case .info:
+            return .blue
         }
     }
 }
